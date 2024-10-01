@@ -1,0 +1,6 @@
+@BodegaApp_HostAddress = http://localhost:5099
+
+GET {{BodegaApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
