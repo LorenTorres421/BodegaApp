@@ -20,14 +20,14 @@ namespace Data.Repository
             return _context.Wines.ToList();
         }
 
-        public void AddWine(int id, int amount)
+        public void AddWine(Wine wine)
         {
-            var wine = _context.Wines.Find(id);
-            if (wine != null)
+            if (wine == null)
             {
-                wine.Stock = amount;
-                _context.SaveChanges();
+                throw new ArgumentException("El vino no puede ser nulo.");
             }
+            _context.Wines.Add(wine);
+            _context.SaveChanges();
         }
 
         public Wine GetWineById(int id)
@@ -46,7 +46,7 @@ namespace Data.Repository
                     .ToList();
         }
 
-        public void UpdateStockWineById(int id, int amount)
+        public void UpdateWineById(int id, int amount)
         {
             var wine = _context.Wines.FirstOrDefault(w => w.Id == id);
 
@@ -56,7 +56,6 @@ namespace Data.Repository
                 _context.SaveChanges();
             }
         }
-
 
     }
 

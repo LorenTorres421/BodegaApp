@@ -10,7 +10,7 @@ namespace Data.Repository
     public interface IWineRepository
     {
         public List<Wine> GetWines();
-        public void AddWine(int id, int amount);
+        public void AddWine(Wine wine);
 
         public Wine GetWineById(int id);
 
@@ -18,7 +18,7 @@ namespace Data.Repository
 
         public List<Wine> GetStockByVariety(string variety);
 
-        public void UpdateStockWineById(int id, int amount);
+        public void UpdateWineById(int id, int amount);
 
     }
 

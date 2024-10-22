@@ -37,12 +37,11 @@ builder.Services.AddSwaggerGen(setupAction =>
 });
 
 builder.Services.AddDbContext<BodegaContext>(dbContextOptions => dbContextOptions.UseSqlite(
-    builder.Configuration["ConnectionStrings:BodegaAPIDBConnectionString"]));
+    builder.Configuration["ConnectionStrings:BodegaDBConnectionString"]));
 
-builder.Services.AddSingleton<IWineRepository>();
-builder.Services.AddSingleton<IUserRepository>();
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<WineRepository>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IWineRepository, WineRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<WineService>();
 

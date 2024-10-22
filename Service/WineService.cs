@@ -51,7 +51,7 @@ namespace Service
 
         public void UpdateWineStockById(int id, int amount)
         {
-            _repository.UpdateStockWineById(id, amount);
+            _repository.UpdateWineById(id, amount);
         }
 
     }
