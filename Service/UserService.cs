@@ -1,10 +1,15 @@
-﻿using Data.Repository;
-using Common.Dtos;
+﻿using Common.Dtos;
 using Data.Entities;
+using Data.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Services
+namespace Service
 {
-    public class UserService 
+    public class UserService
     {
         private readonly UserRepository _userRepository;
 
@@ -18,22 +23,30 @@ namespace Services
             return _userRepository.GetUsers();
         }
 
-        public void RegisterUser(User user)
-        {
-            _userRepository.AddUser(user);
-        }
-
         public void RegisterUser(LoginDto user)
         {
-            // Convertir LoginDto a una entidad User antes de pasarlo al repositorio
+            if (user == null || string.IsNullOrEmpty(user.Username) || string.IsNullOrEmpty(user.Password))
+            {
+                throw new ArgumentException("El nombre de usuario y la contraseña no pueden estar vacíos.");
+            }
+
             var newUser = new User
             {
                 Username = user.Username,
                 Password = user.Password
             };
 
-            _userRepository.AddUser(newUser); // Pasar la entidad User al repositorio
+            _userRepository.AddUser(newUser);
+        }
+
+        public User? AuthenticateUser(string username, string password)
+        {
+            User? userToReturn = _userRepository.Get(username);
+            if (userToReturn is not null && userToReturn.Password == password)
+                return userToReturn;
+            return null;
         }
 
     }
 }
+

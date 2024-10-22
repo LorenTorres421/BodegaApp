@@ -1,43 +1,58 @@
-﻿using Data.Entities;
+﻿using Common.Dtos;
 using Data.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class WineService 
+namespace Service
 {
-    private readonly WineRepository _repository;
-
-    public WineService(WineRepository repository)
+    public class WineService
     {
-        _repository = repository;
-    }
+        private readonly WineRepository _repository;
 
-    public List<Wine> GetAllWines()
-    {
-        return _repository.GetWines();
-    }
+        public WineService(WineRepository repository)
+        {
+            _repository = repository;
+        }
 
-    public void RegisterWine(Wine wine)
-    {
-        _repository.AddWine(wine);
-    }
+        public List<Wine> GetAllWines()
+        {
+            return _repository.GetWines();
+        }
 
-    public void AddStock(int wineId, int amount)
-    {
-        if (amount <= 0) throw new ArgumentException("La cantidad a añadir debe ser mayor a 0.");
+        public void RegisterWine(WineDto wineDto)
+        {
+            if (wineDto == null)
+            {
+                throw new ArgumentException("Los detalles del vino no pueden ser nulos.");
+            }
 
-        var wine = _repository.GetWines().FirstOrDefault(w => w.Id == wineId);
-        if (wine == null) throw new KeyNotFoundException("El vino no existe.");
+            var wine = new Wine
+            {
+                Name = wineDto.Name,
+                Variety = wineDto.Variety,
+                Year = wineDto.Year
+            };
 
-        wine.Stock += amount;
-    }
+            _repository.AddWine(wine);
+        }
 
-    public void RemoveStock(int wineId, int amount)
-    {
-        if (amount <= 0) throw new ArgumentException("La cantidad a reducir debe ser mayor a 0.");
+        public Wine GetWineById(int id)
+        {
+            return _repository.GetWineById(id);
+        }
 
-        var wine = _repository.GetWines().FirstOrDefault(w => w.Id == wineId);
-        if (wine == null) throw new KeyNotFoundException("El vino no existe.");
+        public List<Wine> GetWinesByVariety(string variety)
+        {
+            return _repository.GetStockByVariety(variety);
+        }
 
-        if (wine.Stock - amount < 0) throw new InvalidOperationException("No hay suficiente stock disponible.");
-        wine.Stock -= amount;
+        public void UpdateWineStockById(int id, int amount)
+        {
+            _repository.UpdateStockWineById(id, amount);
+        }
+
     }
 }

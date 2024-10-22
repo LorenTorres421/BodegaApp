@@ -1,23 +1,65 @@
-﻿using Data.Entities;
-using Data.Repository;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Data.Repository
 {
     public class WineRepository : IWineRepository
     {
-        private readonly List<Wine> _wines = new List<Wine>();
+        private readonly BodegaContext _context;
+        
+        public WineRepository(BodegaContext context)
+        {
+            _context = context;  
+        }
 
         public List<Wine> GetWines()
         {
-            return _wines;
+            return _context.Wines.ToList();
         }
 
-        public void AddWine(Wine wine)
+        public void AddWine(int id, int amount)
         {
-            wine.Id = _wines.Count + 1;
-            _wines.Add(wine);
+            var wine = _context.Wines.Find(id);
+            if (wine != null)
+            {
+                wine.Stock = amount;
+                _context.SaveChanges();
+            }
         }
+
+        public Wine GetWineById(int id)
+        {
+            return _context.Wines.FirstOrDefault(w => w.Id == id);
+        }
+
+        public void UpdateWine(Wine wine)
+        {
+            _context.Wines.Add(wine);
+        }
+
+        public List<Wine> GetStockByVariety(string variety)
+        {
+            return _context.Wines.Where(w => w.Variety == variety)
+                    .ToList();
+        }
+
+        public void UpdateStockWineById(int id, int amount)
+        {
+            var wine = _context.Wines.FirstOrDefault(w => w.Id == id);
+
+            if (wine != null)
+            {
+                wine.Stock += amount;
+                _context.SaveChanges();
+            }
+        }
+
+
     }
 
 }
+
 

@@ -1,4 +1,4 @@
-﻿using Services;
+﻿using Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Dtos;
@@ -29,5 +29,6 @@ namespace BodegaApp.Controllers
             _userService.RegisterUser(user);
             return Ok("Usuario registrado correctamente.");
         }
+
     }
 }

@@ -1,6 +1,11 @@
+using Data;
 using Data.Entities;
 using Data.Repository;
-using Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Service;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,13 +14,53 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(setupAction =>
+{
+    setupAction.AddSecurityDefinition("StockApiBearerAuth", new OpenApiSecurityScheme()
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        Description = "Ac� pegar el token generado al loguearse."
+    });
 
+    setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "StockApiBearerAuth" }
+                }, new List<string>() }
+    });
+});
 
-builder.Services.AddSingleton<UserRepository>();
-builder.Services.AddSingleton<WineRepository>();
+builder.Services.AddDbContext<BodegaContext>(dbContextOptions => dbContextOptions.UseSqlite(
+    builder.Configuration["ConnectionStrings:BodegaAPIDBConnectionString"]));
+
+builder.Services.AddSingleton<IWineRepository>();
+builder.Services.AddSingleton<IUserRepository>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<WineRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<WineService>();
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+        };
+    }
+);
+
 
 var app = builder.Build();
 

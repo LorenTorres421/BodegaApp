@@ -1,7 +1,14 @@
-﻿namespace Data.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Data.Entities
 {
     public class User
-    {
+    { 
+        
         public int Id { get; set; }
 
         // Nombre de usuario, requerido y único

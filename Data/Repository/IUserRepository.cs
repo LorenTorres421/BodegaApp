@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Data.Repository
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
-        List<User> GetUsers();
-        void AddUser(User user);
+        public List<User> GetUsers();
+        public void AddUser(User user);
     }
 }

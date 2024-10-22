@@ -1,45 +1,77 @@
 ﻿using Data.Entities;
-using Services;
+using Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Common.Dtos;
 
 namespace BodegaApp.Controllers
 {
     [ApiController]
-[Route("api/[controller]")]
-public class WineController : ControllerBase
-{
-    private readonly WineService _wineService;
-
-    public WineController(WineService wineService)
+    [Route("api/[controller]")]
+    public class WineController : ControllerBase
     {
-        _wineService = wineService;
+        private readonly WineService _wineService;
+
+        public WineController(WineService wineService)
+        {
+            _wineService = wineService;
+        }
+
+        [HttpPost]
+        public IActionResult RegisterWine([FromBody] WineDto wineDto)
+        {
+            try
+            {
+                _wineService.RegisterWine(wineDto);
+                return CreatedAtAction(nameof(GetWineById), new { id = wineDto.Id }, wineDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetAllWines()
+        {
+            var wines = _wineService.GetAllWines();
+
+            var wineDtos = wines.Select(w => new WineDto
+            {
+                Name = w.Name,
+                Variety = w.Variety,
+                Year = w.Year
+            }).ToList();
+
+            return Ok(wineDtos);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetWineById(int id)
+        {
+            var wine = _wineService.GetAllWines().FirstOrDefault(w => w.Id == id);
+            if (wine == null) return NotFound("El vino no existe.");
+
+            // Convertir a WineDto antes de devolver la respuesta
+            var wineDto = new WineDto
+            {
+                Name = wine.Name,
+                Variety = wine.Variety,
+                Year = wine.Year
+            };
+
+            return Ok(wineDto);
+        }
+
+        [HttpPut("{id}/stock")]
+        public IActionResult UpdateStockWineById([FromBody] int id, int newStock)
+        {
+            var wine = _wineService.GetWineById(id);
+            if (wine == null) return NotFound();
+
+            wine.Stock = newStock;
+
+            return NoContent();
+        }
     }
-
-    [HttpPost]
-    public IActionResult RegisterWine([FromBody] Wine wine)
-    {
-        if (wine == null) return BadRequest("Los detalles del vino no pueden ser nulos.");
-
-        _wineService.RegisterWine(wine);
-        return CreatedAtAction(nameof(GetWineById), new { id = wine.Id }, wine);
-    }
-
-    [HttpGet]
-    public ActionResult<List<Wine>> GetAllWines()
-    {
-        var wines = _wineService.GetAllWines();
-        return Ok(wines);
-    }
-
-    [HttpGet("{id}")]
-    public ActionResult<Wine> GetWineById(int id)
-    {
-        var wine = _wineService.GetAllWines().FirstOrDefault(w => w.Id == id);
-        if (wine == null) return NotFound("El vino no existe.");
-        return Ok(wine);
-    }
-}
-
-
 }
