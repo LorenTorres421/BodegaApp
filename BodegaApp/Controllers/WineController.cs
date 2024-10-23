@@ -73,5 +73,14 @@ namespace BodegaApp.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("{variety}/stock")]
+        public IActionResult GetWinesByVariety(string variety)
+        {
+            var wine = _wineService.GetStockByVariety(variety);
+            if (wine == null) return NotFound(); 
+            return Ok(wine);
+        }
     }
+
 }

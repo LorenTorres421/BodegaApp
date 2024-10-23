@@ -44,7 +44,7 @@ namespace Service
             return _repository.GetWineById(id);
         }
 
-        public List<Wine> GetWinesByVariety(string variety)
+        public List<Wine> GetStockByVariety(string variety)
         {
             return _repository.GetStockByVariety(variety);
         }
