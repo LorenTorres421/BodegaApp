@@ -20,5 +20,14 @@ namespace Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Cata>()
+            .HasMany(c => c.Wines)
+            .WithMany(w => w.Catas);
+        }
+
+
+
     }
 }

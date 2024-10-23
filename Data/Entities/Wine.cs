@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,8 @@ public class Wine
    
     // Fecha de registro del vino en el sistema
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
- 
+
+    public List<Cata> Catas { get; set; }
+
 
 }
