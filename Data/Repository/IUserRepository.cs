@@ -11,5 +11,7 @@ namespace Data.Repository
     {
         public List<User> GetUsers();
         public void AddUser(User user);
+
+        public User? Get(string username);
     }
 }

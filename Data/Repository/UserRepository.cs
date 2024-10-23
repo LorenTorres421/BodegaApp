@@ -26,6 +26,7 @@ namespace Data.Repository
             _context.Users.Add(user);
         }
 
+
         public User? Get(string username)
         {
             return _context.Users.FirstOrDefault(u => u.Username == username);

@@ -10,9 +10,9 @@ namespace Service
 {
     public class WineService
     {
-        private readonly WineRepository _repository;
+        private readonly IWineRepository _repository;
 
-        public WineService(WineRepository repository)
+        public WineService(IWineRepository repository)
         {
             _repository = repository;
         }

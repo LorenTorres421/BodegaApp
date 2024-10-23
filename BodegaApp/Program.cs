@@ -37,7 +37,7 @@ builder.Services.AddSwaggerGen(setupAction =>
 });
 
 builder.Services.AddDbContext<BodegaContext>(dbContextOptions => dbContextOptions.UseSqlite(
-    builder.Configuration["ConnectionStrings:BodegaDBConnectionString"]));
+    builder.Configuration["ConnectionStrings:BodegaAPIDBConnectionString"]));
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -71,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

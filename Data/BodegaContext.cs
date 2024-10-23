@@ -14,12 +14,8 @@ namespace Data
 
         public DbSet<Wine> Wines { get; set; }
 
+        public DbSet<Cata> Catas { get; set; }
         public BodegaContext(DbContextOptions<BodegaContext> options) : base(options) //Acá estamos llamando al constructor de DbContext que es el que acepta las opciones
-        {
-
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
         }

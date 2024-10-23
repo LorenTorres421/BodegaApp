@@ -52,7 +52,7 @@ namespace Data.Repository
 
             if (wine != null)
             {
-                wine.Stock += amount;
+                wine.Stock = amount;
                 _context.SaveChanges();
             }
         }

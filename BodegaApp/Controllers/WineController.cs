@@ -32,7 +32,7 @@ namespace BodegaApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllWines()
+        public IActionResult GetAllWines(WineDto wineDto)
         {
             var wines = _wineService.GetAllWines();
 
